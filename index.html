@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .mainbox{
+      height:300px;
+      width:300px;
+      background-color:#eeeeee;
+      display:flex;
+      flex-wrap:wrap;
+      margin:auto;
+    }
+    .smallbox{
+      height:90px;
+      width:90px;
+      background-color:#dddddd;
+      margin-left:7.5px;
+      margin-top:7.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .smallbox:hover{
+      background-color:#cccccc;
+    }
+    .smallbox.clicked{
+      background-color:#888888;
+    }
+    .smallbox p{
+      font-size:80px !important;
+      margin: 0;
+    }
+    #winnerbox {
+      text-align: center;
+      margin: 0 auto;
+      height:60px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    #winnerbox p {
+      font-size: 40px !important;
+      font-weight: bold;
+      margin: 0;
+    }
+    .reset-btn {
+      display: block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .reset-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="background-color: red; color: white; text-align: center; padding: 10px;width:50%; margin:auto;">Tic-Tac-Toe</h1>
+  <p style="text-align: center;margin-top:10px ;padding:0px;">Click on boxes to play!</p>
+  
+  <div id="winnerbox">
+    <p></p>
+  </div>
+  
+ 
+  
+  <div class="mainbox">
+    <div class="smallbox" id="box1" onclick="handleClick(1)"><p></p></div>
+    <div class="smallbox" id="box2" onclick="handleClick(2)"><p></p></div>
+    <div class="smallbox" id="box3" onclick="handleClick(3)"><p></p></div>
+    <div class="smallbox" id="box4" onclick="handleClick(4)"><p></p></div>
+    <div class="smallbox" id="box5" onclick="handleClick(5)"><p></p></div>
+    <div class="smallbox" id="box6" onclick="handleClick(6)"><p></p></div>
+    <div class="smallbox" id="box7" onclick="handleClick(7)"><p></p></div>
+    <div class="smallbox" id="box8" onclick="handleClick(8)"><p></p></div>
+    <div class="smallbox" id="box9" onclick="handleClick(9)"><p></p></div>
+  </div>
+
+	 <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+
+  <script>
+    let turn = 'X';
+    let gameActive = true;
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let winpattern = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
+
+    function resetGame(){
+        for( let i=1;i<10;i++){
+            const Box = document.getElementById(`box${i}`);
+            const pE = Box.querySelector('p');
+            pE.textContent = '';
+        }
+        
+        board = ['', '', '', '', '', '', '', '', ''];
+        gameActive = true;
+        turn = 'X';
+        const winnerBox = document.getElementById(`winnerbox`);
+        const pEl = winnerBox.querySelector('p');
+        pEl.textContent = "";
+    } 
+
+    function handleClick(index) {
+       if (!gameActive) return;
+       const clickedBox = document.getElementById(`box${index}`);
+       const pElement = clickedBox.querySelector('p');
+       if (pElement.textContent !== '') {
+           return; // Exit function if box already has X or O
+       }
+       board[index - 1] = turn;
+       pElement.textContent = turn;
+       // Visual feedback 
+       clickedBox.classList.add('clicked');
+       setTimeout(() => {
+           clickedBox.classList.remove('clicked');
+       }, 200);
+       // Check for winner
+       for (let i = 0; i < 8; i++) {
+           let countX = 0;
+           let countO = 0;
+           for (let j = 0; j < 3; j++) {
+               if (board[winpattern[i][j] - 1] === 'X') countX++;
+               if (board[winpattern[i][j] - 1] === 'O') countO++;
+           }
+           if (countO === 3) {
+               winnermethod('O');
+               return;
+           }
+           if (countX === 3) {
+               winnermethod('X');
+               return;
+           }
+       }
+       // Switch turn only if no winner
+       turn = turn === 'X' ? 'O' : 'X';
+    }
+
+    function winnermethod(winner) {
+       const clickedBox = document.getElementById(`winnerbox`);
+       const pElement = clickedBox.querySelector('p');
+       pElement.textContent = "winner is " + winner;
+       gameActive = false;
+    }
+  </script>
+</body>
+</html>
